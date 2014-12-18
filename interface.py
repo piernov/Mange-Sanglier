@@ -15,21 +15,4 @@ def genQuadrillage(x1, y1, x2, y2, nbLignes, nbColonnes):
 	return cases
 
 def caseVersCL(case, ncol, nligne):
-         return case%nligne, case//ncol
-
-def trouverCaseLibre(ncase, direction, cases):
-        c, l = caseVersCL(ncase)
-        if direction == UP:
-                l -= 1
-        elif direction == RIGHT:
-                c += 1
-        elif direction == DOWN:
-                l += 1
-        elif direction == LEFT:
-                c -= 1
-        n = c*l
-        if n > len(cases) or cases[n][4] == 0:
-                return False
-        else:
-                return l
-
+	return case%nligne, case//ncol

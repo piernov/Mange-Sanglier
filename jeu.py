@@ -1,7 +1,20 @@
 from turtle import *
 import dessin
+import interface
 
 meilleurScore = 0
+
+def clic(x, y, Etat):
+	cases = Etat["cases"]
+	i = 0
+	while i < len(cases):
+		if x < cases[i][2] and x > cases[i][0] and y < cases[i][3] and y > cases[i][1]:
+			print(i)
+			if i in Etat["placepokemons"]:
+				dessin.texte(cases[i][0]+10, cases[i][1]+10, "Found!")
+				print("MIAOUNYAN")
+		i+=1
+	return True
 
 def fin(resultat,score):
     if resultat:

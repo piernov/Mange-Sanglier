@@ -2,15 +2,14 @@ import turtle
 import random
 import dessin
 import interface
+import jeu
 
-UP = 1
-RIGHT = 2
-DOWN = 3
-LEFT = 4
+UP = 0
+RIGHT = 1
+DOWN = 2
+LEFT = 3
 
 wm = turtle.Screen()
-
-cases = []
 
 pokemons = {
 	"Sanglier" : 4,
@@ -19,54 +18,102 @@ pokemons = {
 }
 
 niveaux = [
-	{ "pokemons" : { "Sanglier": 3, "Laie": 3, "Marcassin": 3}, "cases": [10, 10] }
+	{ "pokemons" : { "Sanglier": 0, "Laie": 3, "Marcassin": 3}, "cases": [10, 10] }
 ]
-niveau = 0
-ncol = niveaux[niveau]["cases"][0]
-nligne = niveaux[niveau]["cases"][1]
-placepokemons = {}
 
-def placerPokemon(nCases, pokemon, placepokemons):
-	if nCases == 1:
+Config = {
+	"niveau" : 0
+}
+
+Etat = {
+	"cases" : [],
+	"niveau" : 0,
+	"ncol" : 0,
+	"nligne" : 0,
+	"placepokemons" : {}
+}
+
+def selNextCase(ncase, direction, ncol, nligne):
+	c, l = interface.caseVersCL(ncase, ncol, nligne)
+
+	if direction == UP:
+		l -= 1
+	elif direction == RIGHT:
+		c += 1
+	elif direction == DOWN:
+		l += 1
+	elif direction == LEFT:
+		c -= 1
+	n = c+l*ncol
+
+	return n
+
+def placerPokemon(nCases, pokemon, num, placepokemons, ncol, nligne):
+	finished = False
+	while not finished:
+		tmpCases = {}
 		n = random.randint(0, 99)
-		while n in placepokemons:
-			n = random.randint(0, 99)
+		tmpCases[n] = pokemon
 
-		placepokemons[n] = pokemon
-	return placepokemons
 
-def placerPokemons(pokemonsNiv, placepokemons):
+		if nCases == 3:
+			direction = random.randint(0,3)
+			n = selNextCase(n, direction, ncol, nligne)
+			tmpCases[n] = pokemon
+			if direction == 0 or direction == 2:
+				direction = random.randint(0,1)*2+1
+			else:
+				direction = random.randint(0,1)*2
+			n = selNextCase(n, direction, ncol, nligne)
+			tmpCases[n] = pokemon
+
+		# TODO : nCases == 4
+
+		finished = True
+		for k, v in tmpCases.items():
+			if n in placepokemons or n < 0 or n > ncol*nligne:
+				finished = False
+
+	for k, v in tmpCases.items():
+		placepokemons[k] = v+str(num)
+
+def placerPokemons(pokemonsNiv, ncol, nligne):
+	placepokemons = {}
 	for key, value in pokemonsNiv.items():
 		i = 1
 		while i <= value:
-			placepokemons = placerPokemon(pokemons[key], value, placepokemons)
+			placerPokemon(pokemons[key], key, i, placepokemons, ncol, nligne)
+			print(i, placepokemons)
 			i += 1
-		print(key, value)
+
+	# Debug
 	for key, value in placepokemons.items():
 		print(key,value)
+
 	return placepokemons
 
-def clic(x, y):
-	i = 0
-	while i < len(cases):
-		if x < cases[i][2] and x > cases[i][0] and y < cases[i][3] and y > cases[i][1]:
-			print(i, interface.caseVersCL(i, ncol, nligne))
-			if i in placepokemons:
-				dessin.texte(cases[i][0], cases[i][1], "Found!")
-				print("MIAOUNYAN")
-		i+=1
+def clicHandle(x, y):
+	jeu.clic(x, y, Etat)
 
+def initEtat(Etat):
+	Etat["niveau"] = Config["niveau"]
+	Etat["ncol"] = niveaux[Etat["niveau"]]["cases"][0]
+	Etat["nligne"] = niveaux[Etat["niveau"]]["cases"][1]
+	
+	Etat["cases"] = interface.genQuadrillage(50, 50, turtle.window_width()-50, turtle.window_height()-50, Etat["ncol"], Etat["nligne"])
 
-cases = interface.genQuadrillage(50, 50, turtle.window_width()-50, turtle.window_height()-50, ncol, nligne)
+	Etat["placepokemons"] = placerPokemons(niveaux[Etat["niveau"]]["pokemons"], Etat["ncol"], Etat["nligne"])
 
+def main():
+	initEtat(Etat)
 
-placepokemons = placerPokemons(niveaux[0]["pokemons"], placepokemons)
+	interface.initTurtle()
 
-interface.initTurtle()
+	dessin.quadrillage(Etat["cases"])
 
-dessin.quadrillage(cases)
+	wm.onclick(clicHandle)
 
-wm.onclick(clic)
+	wm.listen()	
+	wm.mainloop()
 
-wm.listen()	
-wm.mainloop()
+main()
