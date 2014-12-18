@@ -1,3 +1,7 @@
+# projet programmation peip1 
+# PAYET Marion
+# NOVAC Pierre-Emmanuel
+
 from turtle import *
 import dessin
 import interface

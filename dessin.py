@@ -1,3 +1,7 @@
+# projet programmation peip1 
+# PAYET Marion
+# NOVAC Pierre-Emmanuel
+
 import turtle
 
 def ligne(x1, y1, x2, y2):
