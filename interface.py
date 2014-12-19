@@ -8,7 +8,6 @@ def initTurtle():
         # Fonction qui initialise la position de la tortue
         # Setworldcoordinates redéfini le système de coordonnées
         turtle.setworldcoordinates(0, turtle.window_height(), turtle.window_width(), 0)
-        turtle.speed(0)
         turtle.tracer(n=0, delay=0)
 
 def genQuadrillage(x1, y1, x2, y2, nbLignes, nbColonnes):

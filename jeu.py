@@ -10,15 +10,25 @@ import interface
 
 meilleurScore = 0
 
+def hit(i, Etat):
+	Etat["cases"][i].insert(4, "green")
+
+def miss(i, Etat):
+	Etat["cases"][i].insert(4, "red")
+
 def clic(x, y, Etat):
 	cases = Etat["cases"]
 	i = 0
 	while i < len(cases):
+		if len(cases[i]) > 4 and cases[i][4] == "red":
+			del cases[i][4]
 		if x < cases[i][2] and x > cases[i][0] and y < cases[i][3] and y > cases[i][1]:
 			print(i)
 			if i in Etat["placepokemons"]:
-				dessin.texte(cases[i][0]+10, cases[i][1]+10, "Found!")
-				print("MIAOUNYAN")
+				if len(cases[i]) <= 4:
+					hit(i, Etat)
+			else:
+				miss(i, Etat)
 		i+=1
 	return True
 

@@ -21,7 +21,7 @@ pokemons = {
 }
 
 niveaux = [
-	{ "pokemons" : { "Sanglier": 0, "Laie": 3, "Marcassin": 3}, "cases": [10, 10] }
+	{ "pokemons" : { "Sanglier": 3, "Laie": 3, "Marcassin": 3}, "cases": [10, 10] }
 ]
 
 Config = {
@@ -39,14 +39,17 @@ Etat = {
 def selNextCase(ncase, direction, ncol, nligne):
 	c, l = interface.caseVersCL(ncase, ncol, nligne)
 
-	if direction == UP:
+	if direction == UP and l > 0:
 		l -= 1
-	elif direction == RIGHT:
+	elif direction == RIGHT and c < ncol:
 		c += 1
-	elif direction == DOWN:
+	elif direction == DOWN and l < nligne:
 		l += 1
-	elif direction == LEFT:
+	elif direction == LEFT and c > 0:
 		c -= 1
+	else:
+		return -1
+
 	n = c+l*ncol
 
 	return n
@@ -59,11 +62,11 @@ def placerPokemon(nCases, pokemon, num, placepokemons, ncol, nligne):
 		tmpCases[n] = pokemon
 
 
-		if nCases == 3:
-			direction = random.randint(0,3)
-			n = selNextCase(n, direction, ncol, nligne)
+		if nCases >= 3:
+			direction1 = random.randint(0,3)
+			n = selNextCase(n, direction1, ncol, nligne)
 			tmpCases[n] = pokemon
-			if direction == 0 or direction == 2:
+			if direction1 == 0 or direction1 == 2:
 				direction = random.randint(0,1)*2+1
 			else:
 				direction = random.randint(0,1)*2
@@ -71,10 +74,21 @@ def placerPokemon(nCases, pokemon, num, placepokemons, ncol, nligne):
 			tmpCases[n] = pokemon
 
 		# TODO : nCases == 4
+		if nCases == 4:
+			if direction1 == 0:
+				direction = 2
+			elif direction1 == 1:
+				direction = 3
+			elif direction1 == 2:
+				direction = 0
+			elif direction1 == 3:
+				direction = 1
+			n = selNextCase(n, direction, ncol, nligne)
+			tmpCases[n] = pokemon
 
 		finished = True
 		for k, v in tmpCases.items():
-			if n in placepokemons or n < 0 or n > ncol*nligne:
+			if k in placepokemons or k < 0 or k > ncol*nligne:
 				finished = False
 
 	for k, v in tmpCases.items():
@@ -97,6 +111,8 @@ def placerPokemons(pokemonsNiv, ncol, nligne):
 
 def clicHandle(x, y):
 	jeu.clic(x, y, Etat)
+	turtle.clear()
+	draw(Etat)
 
 def initEtat(Etat):
 	Etat["niveau"] = Config["niveau"]
@@ -107,12 +123,15 @@ def initEtat(Etat):
 
 	Etat["placepokemons"] = placerPokemons(niveaux[Etat["niveau"]]["pokemons"], Etat["ncol"], Etat["nligne"])
 
+def draw(Etat):
+	dessin.quadrillage(Etat["cases"], Etat["ncol"], Etat["nligne"])
+
 def main():
 	initEtat(Etat)
 
 	interface.initTurtle()
 
-	dessin.quadrillage(Etat["cases"])
+	draw(Etat)
 
 	wm.onclick(clicHandle)
 
