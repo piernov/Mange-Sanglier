@@ -2,6 +2,8 @@
 # PAYET Marion
 # NOVAC Pierre-Emmanuel
 
+# Programme qui affiche un message a la fin du jeu et demande si l'on veut rejouer
+
 from turtle import *
 import dessin
 import interface
@@ -21,8 +23,9 @@ def clic(x, y, Etat):
 	return True
 
 def fin(resultat,score):
+    #La tortue écrit en coordonnée x1 et y1 le message
     if resultat:
-        dessin.texte(x1,y1,"Félicitation vous avez gagné !") #La tortue écrit en haut à gauche le texte
+        dessin.texte(x1,y1,"Félicitation vous avez gagné !")
         i = score
         if score > meilleurScore:
             meilleurScore = i
@@ -30,7 +33,8 @@ def fin(resultat,score):
         else :
             dessin.texte(x1,y1,"Vous avez réalisé un score de : " + str(score) )
     else :
-         dessin.texte(x1,y1,"Vous avez malheureusement perdu.") # La torue écrit en haut à gauche le texte
+         dessin.texte(x1,y1,"Vous avez malheureusement perdu.")
+    # Bouton qui permet de jouer une nouvelle partie
     dessin.texte(x1,y1-20,"Recommencer ?")
     dessin.bouton("Oui", x1, y1-40)
     dessin.bouton("Non", x1+40, y1-40)

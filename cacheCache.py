@@ -1,7 +1,6 @@
 # projet programmation peip1 
 # PAYET Marion
 # NOVAC Pierre-Emmanuel
-
 import turtle
 import random
 import dessin
