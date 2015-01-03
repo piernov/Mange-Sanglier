@@ -31,11 +31,7 @@ Config = {
 	"niveau" : 0
 }
 
-def clicHandle(x, y, Etat):
-	jeu.clic(x, y, Etat)
-	turtle.clear()
-	draw(Etat)
-
+# Initialisation du tableau contenant les variables d'état du jeu
 def initEtat(niveau):
 	Etat = {}
 
@@ -43,7 +39,7 @@ def initEtat(niveau):
 	Etat["ncol"] = Config["niveaux"][niveau]["cases"][0]
 	Etat["nligne"] = Config["niveaux"][niveau]["cases"][1]
 	
-	Etat["cases"] = interface.genQuadrillage(50, 50, turtle.window_width()-50, turtle.window_height()-50, Etat["ncol"], Etat["nligne"])
+	Etat["cases"] = interface.genQuadrillage(50, 50, turtle.window_width()-50, turtle.window_height()-50, Etat["ncol"], Etat["nligne"]) # 50px de marges
 	Etat["placepokemons"] = placement.placerPokemons(Config["niveaux"][niveau]["pokemons"], Config["pokemons"], Etat["ncol"], Etat["nligne"])
 
 	Etat["ptPokemons"] = Config["niveaux"][niveau]["ptPokemons"]
@@ -53,21 +49,25 @@ def initEtat(niveau):
 
 	return Etat
 
-def draw(Etat):
-	interface.draw(Etat)
+
+# Fonction appellée lors d'un clic
+def clic(x, y, Etat):
+	jeu.clic(x, y, Etat)
+	turtle.clear() # On efface l'écran
+	interface.draw(Etat) # On redessine l'interface
 
 def main():
-	wm = turtle.Screen()
+	wm = turtle.Screen() # Initialisation de l'affichage
 
-	interface.initTurtle()
+	interface.initTurtle() # Initialisation de la tortue
 
-	Etat = initEtat(Config["niveau"])
+	Etat = initEtat(Config["niveau"]) # Initilisation du jeu
 
-	draw(Etat)
+	interface.draw(Etat) # On dessine l'interface
 
-	wm.onclick(lambda x,y,e=Etat: clicHandle(x,y,e))
+	wm.onclick(lambda x,y,e=Etat: clic(x,y,e)) # Fonction lambda utilisée pour passer en argument l'état du jeu à la fonction clic() qui gère le clic
 
-	wm.listen()	
+	wm.listen()
 	wm.mainloop()
 
 main()
