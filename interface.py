@@ -3,6 +3,7 @@
 # NOVAC Pierre-Emmanuel
 # Programme qui initialise l'interface
 import turtle
+import dessin
 
 def initTurtle():
         # Fonction qui initialise la position de la tortue
@@ -19,6 +20,10 @@ def genQuadrillage(x1, y1, x2, y2, nbLignes, nbColonnes):
 		for j in range(nbColonnes):
 			cases.insert(j+i*nbColonnes, [x1+largeur*j/nbColonnes, y1+hauteur*i/nbLignes, x1+largeur*(j+1)/nbColonnes, y1+hauteur*(i+1)/nbLignes] )
 	return cases
+
+def draw(Etat):
+	dessin.quadrillage(Etat["cases"], Etat["ncol"], Etat["nligne"])
+	dessin.texte(10, 10, "Score : " + str(Etat["score"]) + " Niveau : " + str(Etat["niveau"]))
 
 def caseVersCL(case, ncol, nligne):
 	return case%nligne, case//ncol

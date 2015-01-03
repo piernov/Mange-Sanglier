@@ -12,9 +12,13 @@ meilleurScore = 0
 
 def hit(i, Etat):
 	Etat["cases"][i].insert(4, "green")
+	Etat["score"] += Etat["ptPokemons"]
 
 def miss(i, Etat):
 	Etat["cases"][i].insert(4, "red")
+	Etat["score"] -= Etat["ptMalus"]
+	if Etat["score"] <= -300:
+		fin(false, Etat["score"])
 
 def clic(x, y, Etat):
 	cases = Etat["cases"]
@@ -25,6 +29,7 @@ def clic(x, y, Etat):
 		if x < cases[i][2] and x > cases[i][0] and y < cases[i][3] and y > cases[i][1]:
 			print(i)
 			if i in Etat["placepokemons"]:
+				print(Etat["placepokemons"][i])
 				if len(cases[i]) <= 4:
 					hit(i, Etat)
 			else:
