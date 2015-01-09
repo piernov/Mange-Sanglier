@@ -15,7 +15,8 @@ def ligne(x1, y1, x2, y2):
 	turtle.down()
 	turtle.goto(x2,y2)
 
-def rectangle(x1, y1, x2, y2, fillcolor=False):
+def rectangle(x1, y1, x2, y2, fillcolor=False, color="white"):
+
 	if fillcolor:
 		turtle.fillcolor(fillcolor)
 		turtle.begin_fill()
@@ -27,30 +28,43 @@ def rectangle(x1, y1, x2, y2, fillcolor=False):
 	if fillcolor:
 		turtle.end_fill()
 
-def texte(x,y,texte, align="left") :
+def cercle(x, y, r, fillcolor=False, color="white"):
+	turtle.color(color)
+
+	if fillcolor:
+		turtle.fillcolor(fillcolor)
+		turtle.begin_fill()
+
+	turtle.up()
+	turtle.goto(x,y)
+	turtle.down()
+	turtle.circle(r)
+
+	if fillcolor:
+		turtle.end_fill()
+
+
+def texte(x,y,txt, align="left") :
         # Fonction qui fait écrire un texte à la tortue pour donner des informations à l'utilisateur
         # Elle prend pour arguments les coordonnée du point qui correspond au début du message
 	turtle.up()
 	turtle.goto (x,y)
 	turtle.down()
-	turtle.write (texte, align=align)
+	turtle.write (txt, align=align, font=(None, 18, "normal"))
 
-def bouton(texte, x, y):
+def bouton(x, y, txt):
         # Fonction qui fait le dessin d'un bouton rectangulaire qui prend pour argument un texte à l'intérieur, centré, et les coordonnées de la position de ce bouton
-	xx = x+30
-	yy = y-15
-	texte((xx+x)/2, yy, texte, align="center")
+	xx = x+40
+	yy = y+20
+	texte((xx+x)/2, yy, txt, align="center")
 	rectangle(x, y, xx, yy)
+	return xx, yy
 
-def quadrillage(cases, ncol, nligne):
-	# Fonction qui a pour argument le nombre de cases qu'il faut dans la partie
-	i = 0
-	while i < len(cases):
-		c, l = interface.caseVersCL(i, ncol, nligne)
-		if c == 0:
-			texte(cases[i][0]-10, (cases[i][1]+cases[i][3])/2, l)
-		if l == 0:
-			texte((cases[i][0]+cases[i][2])/2, cases[i][1]-10, c)
-		rectangle(*cases[i])
-		i+=1
-
+def arbre(x1, y1):
+	x2 = x1+30
+	y2 = y1+150
+	r = (x1+x2)/2
+	rectangle(x1, y1, x2, y2, fillcolor="brown")
+	cercle(x1, y1, r, fillcolor="green", color="green")
+	cercle(x2, y1, r, fillcolor="green", color="green")
+	cercle((x1+x2)/2, y1-r, r, fillcolor="green", color="green")
