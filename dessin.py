@@ -6,6 +6,7 @@
 
 import turtle
 import interface
+import random
 
 def ligne(x1, y1, x2, y2):
         # Fonction qui dessigne les lignes du quadrillage, la tortue prend comme arguments le point de coordonées (x1,y1) comme début de ligne
@@ -15,7 +16,8 @@ def ligne(x1, y1, x2, y2):
 	turtle.down()
 	turtle.goto(x2,y2)
 
-def rectangle(x1, y1, x2, y2, fillcolor=False, color="white"):
+def rectangle(x1, y1, x2, y2, fillcolor=False, color="black"):
+	turtle.color(color)
 
 	if fillcolor:
 		turtle.fillcolor(fillcolor)
@@ -28,7 +30,18 @@ def rectangle(x1, y1, x2, y2, fillcolor=False, color="white"):
 	if fillcolor:
 		turtle.end_fill()
 
-def cercle(x, y, r, fillcolor=False, color="white"):
+def triangle (x,y,longueur):
+	turtle.up()
+	turtle.goto(x,y)
+	turtle.down ()
+
+	i=0
+	while i<=2:
+		turtle.left(240)
+		turtle.forward(longueur)
+		i=i+1
+
+def cercle(x, y, r, fillcolor=False, color="black"):
 	turtle.color(color)
 
 	if fillcolor:
@@ -44,9 +57,10 @@ def cercle(x, y, r, fillcolor=False, color="white"):
 		turtle.end_fill()
 
 
-def texte(x,y,txt, align="left") :
+def texte(x,y,txt, align="left", color="black") :
         # Fonction qui fait écrire un texte à la tortue pour donner des informations à l'utilisateur
         # Elle prend pour arguments les coordonnée du point qui correspond au début du message
+	turtle.color(color)
 	turtle.up()
 	turtle.goto (x,y)
 	turtle.down()
@@ -68,3 +82,47 @@ def arbre(x1, y1):
 	cercle(x1, y1, r, fillcolor="green", color="green")
 	cercle(x2, y1, r, fillcolor="green", color="green")
 	cercle((x1+x2)/2, y1-r, r, fillcolor="green", color="green")
+
+def herbe (x,y,i):
+	somme = 0
+	r=0
+	turtle.fillcolor('green')
+
+	while r<= i :
+		turtle.begin_fill()
+		longueur= random.randint(10,65)
+		triangle(x+somme+longueur,y,longueur)
+		somme += longueur
+		r=r+1
+		turtle.end_fill()
+
+def soleil (x,y,rayon,longueur):
+	turtle.pencolor('yellow')
+	turtle.up()
+	turtle.goto(x,y)
+	turtle.down()
+	turtle.fillcolor('yellow')
+	turtle.begin_fill()
+	turtle.circle (rayon)
+	turtle.end_fill()
+
+	turtle.up()
+	turtle.goto(x-rayon,y+rayon)
+	turtle.down()
+	turtle.forward(-longueur)
+	turtle.up()
+	turtle.goto(x+rayon,y+rayon)
+	turtle.down()
+	turtle.forward(longueur)
+
+	turtle.up()
+	turtle.goto(x,y+2*rayon)
+	turtle.down()
+	turtle.left(90)
+	turtle.forward(longueur)
+	turtle.up()
+	turtle.goto(x,y+2*rayon)
+	turtle.down()
+	turtle.forward(-longueur)
+	turtle.right(90)
+

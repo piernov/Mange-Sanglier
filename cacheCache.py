@@ -57,6 +57,7 @@ Config = {
 def init(niveau, Etat):
 	turtle.clear() # On efface l'écran
 	initEtat(niveau, Etat) # Initilisation du jeu
+	interface.initBouton()
 	interface.dessine(Etat) # On dessine l'interface
 
 # Initialisation du tableau contenant les variables d'état du jeu

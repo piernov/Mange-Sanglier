@@ -60,21 +60,5 @@ def clic(x, y, Etat):
 	return True
 
 def fin(resultat, Etat):
-	x1 = 160
-	y1 = -9
-	x2 = 700
-	y2 = 60
 	Etat["fin"] = True
-	dessin.rectangle(x1, y1, x2, y2, fillcolor="white")
-
-	# La tortue écrit en coordonnée x1 et y1 le message
-	if resultat:
-		dessin.texte(x1+15,y1+30,"Félicitation vous avez gagné !")
-		dessin.texte(x1+15,y1+50,"Vous avez réalisé un score de : " + str(Etat["score"]) )
-		dessin.texte(x2-200,y1+25,"Aller au niveau suivant ?")
-	else :
-		dessin.texte(x1+15,y1+30,"Vous avez malheureusement perdu.")
-		dessin.texte(x2-150,y1+25,"Recommencer ?")
-
-	interface.bouton(x2-130, y1+30, "Oui", lambda: Etat["reset"](Etat["niveau"]+1, Etat))
-	interface.bouton(x2-70, y1+30, "Non", lambda: quit())
+	Etat["resultat"] = resultat
