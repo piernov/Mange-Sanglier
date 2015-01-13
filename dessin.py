@@ -8,6 +8,19 @@ import turtle
 import interface
 import random
 
+tailleTexte = 0 
+
+# Permet d'adapter la taille de la police quelque soit la résolution en ppp du texte
+def initTexte():
+	turtle.up()
+	turtle.goto(0,0)
+	turtle.write ("—", True, align="left", font=(None, 20, "normal")) # Tiret cadratin de taille 20 comme référence
+	x, y = turtle.pos() # Nouvelle position de la tortue après déplacement pour l'écriture
+	# Nouvelle taille du texte: 
+	# partie entière du rapport entre la taille de la police et l'espace occupé en pixel
+	# multiplié par 18 (facteur arbitraire)
+	texte.tailleTexte = int((20/x)*18)
+
 def ligne(x1, y1, x2, y2):
 	# Fonction qui dessigne les lignes du quadrillage, la tortue prend comme arguments le point de coordonées (x1,y1) comme début de ligne
 	#et le point de coordonées (x2,y2) comme point de fin de ligne 
@@ -60,11 +73,12 @@ def cercle(x, y, r, fillcolor=False, color="black"):
 def texte(x,y,txt, align="left", color="black") :
 	# Fonction qui fait écrire un texte à la tortue pour donner des informations à l'utilisateur
 	# Elle prend pour arguments les coordonnée du point qui correspond au début du message
+	
 	turtle.color(color)
 	turtle.up()
 	turtle.goto (x,y)
 	turtle.down()
-	turtle.write (txt, align=align, font=(None, 18, "normal"))
+	turtle.write (txt, align=align, font=(None, texte.tailleTexte, "normal"))
 
 def bouton(x, y, txt):
 	# Fonction qui fait le dessin d'un bouton rectangulaire qui prend pour argument un texte à l'intérieur, centré, et les coordonnées de la position de ce bouton
