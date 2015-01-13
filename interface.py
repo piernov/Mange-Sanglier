@@ -8,7 +8,9 @@ import dessin
 boutons = []
 
 def initTurtle():
-	# Fonction qui initialise la position de la tortue
+	# Fonction qui initialise la fenêtre de la tortue
+	turtle.setup(width=1024, height=600)
+	turtle.title("Mange-Sanglier")
 	# Setworldcoordinates redéfini le système de coordonnées
 	turtle.setworldcoordinates(0, turtle.window_height(), turtle.window_width(), 0)
 	turtle.tracer(n=0, delay=0)
@@ -33,13 +35,17 @@ def dessinQuadrillage(cases, ncol, nligne):
 			dessin.texte(cases[i][0]-15, (cases[i][1]+cases[i][3]+20)/2, l)
 		if l == 0:
 			dessin.texte((cases[i][0]+cases[i][2])/2, cases[i][1]-5, c)
-		dessin.rectangle(*cases[i])
+		if len(cases[i]) == 6 and cases[i][5] == "marcassin":
+			dessin.rectangle(cases[i][0], cases[i][1], cases[i][2], cases[i][3], cases[i][4])
+			dessin.marcassin((3*cases[i][0]+cases[i][2])/4, (3*cases[i][1]+cases[i][3])/4, (cases[i][0]+3*cases[i][2])/4, (cases[i][1]+cases[i][3])/2)
+		else:
+			dessin.rectangle(*cases[i])
 		i+=1
 
 def fin(Etat):
 	x1 = 160
 	y1 = -9
-	x2 = 700
+	x2 = 720
 	y2 = 60
 	dessin.rectangle(x1, y1, x2, y2, fillcolor="white")
 
@@ -53,26 +59,34 @@ def fin(Etat):
 		else:
 			dessin.texte(x1+15,y1+30,"Félicitation vous avez gagné !")
 			dessin.texte(x1+15,y1+50,"Vous avez réalisé un score de : " + str(Etat["score"]) )
-			dessin.texte(x2-200,y1+25,"Aller au niveau suivant ?")
+			dessin.texte(x2-220,y1+25,"Aller au niveau suivant ?")
 	else :
 		dessin.texte(x1+15,y1+30,"Vous avez malheureusement perdu.")
 		dessin.texte(x2-150,y1+25,"Recommencer ?")
 
-	bouton(x2-130, y1+30, "Oui", lambda: Etat["reset"](Etat["niveau"]+1 if Etat["resultat"] else 0, Etat))
-	bouton(x2-70, y1+30, "Non", lambda: quit())
+	bouton(x2-150, y1+30, "Oui", lambda: Etat["reset"](Etat["niveau"]+1 if Etat["resultat"] else 0, Etat))
+	bouton(x2-90, y1+30, "Non", lambda: quit())
 
 def hud(Etat):
-	dessin.rectangle(-9, -9, 120, 60, fillcolor="white")
+	dessin.rectangle(-9, -9, 120, 80, fillcolor="white")
 	dessin.texte(10, 20, "Score : " + str(Etat["score"])) # Affiche le score
 	dessin.texte(5, 40, " Niveau : " + str(Etat["niveau"])) # Affiche le niveau
+
+	# Barre de vie:
+	# non affichée si < ptLim
+	# rouge si < ptLim/2
+	# sinon verte
+	dessin.rectangle(5, 50, 100, 70)
+	if Etat["score"] > Etat["ptLim"]:
+		dessin.rectangle(5, 50, (-Etat["ptLim"]-max(0,-Etat["score"]))*0.0025*(-Etat["ptLim"]), 70, fillcolor = "green" if Etat["score"] > Etat["ptLim"]/2 else "red")
 
 	if Etat["fin"]:
 		fin(Etat)
 
 def decors():
 	dessin.arbre(20, 150)
-	dessin.herbe(-12,turtle.window_width()-40,30)
-	dessin.soleil(turtle.window_height()-30,-40,50,50)
+	dessin.herbe(-12,turtle.window_height(),30)
+	dessin.soleil(turtle.window_width()-70,-40,50,50)
 	dessin.champignon(15,400)
 	dessin.marcassin(-50+turtle.window_width()/2, 0, 50+turtle.window_width()/2, 30)
 

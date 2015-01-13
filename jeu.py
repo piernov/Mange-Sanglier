@@ -17,12 +17,17 @@ def hit(i, Etat):
 
 	# Ci-dessous on cherche si toutes les cases pour un Pokémon ont été trouvées
 	casesToutesTrouvees = True
+	tmpNum = []
 	for k, v in Etat["placepokemons"].items():
-		if Etat["placepokemons"][i] == v and ( len(Etat["cases"][k]) < 5 or Etat["cases"][k][4] != "green" ): # On cherche les cases qui ont le même identifiant de Pokémon et qui ne sont pas vertes, càd qui n'ont pas encore été trouvées
-			casesToutesTrouvees = False
+		if Etat["placepokemons"][i] == v: # On cherche les cases qui ont le même identifiant de Pokémon
+			tmpNum.append(k)
+			if len(Etat["cases"][k]) < 5 or Etat["cases"][k][4] != "green": # et qui ne sont pas vertes, càd qui n'ont pas encore été trouvées
+				casesToutesTrouvees = False
 
 	if casesToutesTrouvees:
 		print("Pokemon trouvé: " + str(Etat["placepokemons"][i]))
+		for j in tmpNum:
+			Etat["cases"][j].insert(5, "marcassin")
 
 		# Ci-dessous on cherche si tous les Pokémons ont été trouvés
 		pokemonsTousTrouves = True
