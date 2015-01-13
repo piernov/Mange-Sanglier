@@ -45,14 +45,20 @@ def fin(Etat):
 
 	# La tortue écrit en coordonnée x1 et y1 le message
 	if Etat["resultat"]:
-		dessin.texte(x1+15,y1+30,"Félicitation vous avez gagné !")
-		dessin.texte(x1+15,y1+50,"Vous avez réalisé un score de : " + str(Etat["score"]) )
-		dessin.texte(x2-200,y1+25,"Aller au niveau suivant ?")
+		if Etat["niveau"] == Etat["nbNiveaux"] -1:
+			dessin.texte(x1+15,y1+30,"Félicitation vous avez fini le jeu !")
+			dessin.texte(x1+15,y1+50,"Vous avez réalisé un score de : " + str(Etat["score"]) )
+			dessin.texte(x2-200,y1+25,"Recommencer ?")
+			Etat["resultat"] = False
+		else:
+			dessin.texte(x1+15,y1+30,"Félicitation vous avez gagné !")
+			dessin.texte(x1+15,y1+50,"Vous avez réalisé un score de : " + str(Etat["score"]) )
+			dessin.texte(x2-200,y1+25,"Aller au niveau suivant ?")
 	else :
 		dessin.texte(x1+15,y1+30,"Vous avez malheureusement perdu.")
 		dessin.texte(x2-150,y1+25,"Recommencer ?")
 
-	bouton(x2-130, y1+30, "Oui", lambda: Etat["reset"](Etat["niveau"]+1, Etat))
+	bouton(x2-130, y1+30, "Oui", lambda: Etat["reset"](Etat["niveau"]+1 if Etat["resultat"] else 0, Etat))
 	bouton(x2-70, y1+30, "Non", lambda: quit())
 
 def hud(Etat):

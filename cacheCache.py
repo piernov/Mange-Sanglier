@@ -47,7 +47,6 @@ Config = {
 			"ptMalus" : 20,							# Points perdus pour chaque mauvaise case
 			"ptLim" : -200							# Limite inférieure déclanchant la perte du jeu
 		}
-
 	],
 
 	# Niveau par défaut
@@ -63,6 +62,7 @@ def init(niveau, Etat):
 # Initialisation du tableau contenant les variables d'état du jeu
 def initEtat(niveau, Etat):
 	Etat["niveau"] = niveau
+	Etat["nbNiveaux"] = len(Config["niveaux"])
 	Etat["ncol"] = Config["niveaux"][niveau]["cases"][0]
 	Etat["nligne"] = Config["niveaux"][niveau]["cases"][1]
 	
