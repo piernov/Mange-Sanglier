@@ -9,8 +9,8 @@ import interface
 import random
 
 def ligne(x1, y1, x2, y2):
-        # Fonction qui dessigne les lignes du quadrillage, la tortue prend comme arguments le point de coordonées (x1,y1) comme début de ligne
-        #et le point de coordonées (x2,y2) comme point de fin de ligne 
+	# Fonction qui dessigne les lignes du quadrillage, la tortue prend comme arguments le point de coordonées (x1,y1) comme début de ligne
+	#et le point de coordonées (x2,y2) comme point de fin de ligne 
 	turtle.up()
 	turtle.goto(x1, y1)
 	turtle.down()
@@ -58,8 +58,8 @@ def cercle(x, y, r, fillcolor=False, color="black"):
 
 
 def texte(x,y,txt, align="left", color="black") :
-        # Fonction qui fait écrire un texte à la tortue pour donner des informations à l'utilisateur
-        # Elle prend pour arguments les coordonnée du point qui correspond au début du message
+	# Fonction qui fait écrire un texte à la tortue pour donner des informations à l'utilisateur
+	# Elle prend pour arguments les coordonnée du point qui correspond au début du message
 	turtle.color(color)
 	turtle.up()
 	turtle.goto (x,y)
@@ -67,7 +67,7 @@ def texte(x,y,txt, align="left", color="black") :
 	turtle.write (txt, align=align, font=(None, 18, "normal"))
 
 def bouton(x, y, txt):
-        # Fonction qui fait le dessin d'un bouton rectangulaire qui prend pour argument un texte à l'intérieur, centré, et les coordonnées de la position de ce bouton
+	# Fonction qui fait le dessin d'un bouton rectangulaire qui prend pour argument un texte à l'intérieur, centré, et les coordonnées de la position de ce bouton
 	xx = x+40
 	yy = y+20
 	texte((xx+x)/2, yy, txt, align="center")
@@ -126,3 +126,84 @@ def soleil (x,y,rayon,longueur):
 	turtle.forward(-longueur)
 	turtle.right(90)
 
+def champignon(x1,y1):
+	x2 = x1+40
+	y2 = y1+50
+	r = (x1+x2)/2
+	rectangle(x1, y1, x2, y2, fillcolor="white")
+
+	r = 30
+	turtle.up()
+	turtle.goto((x1+x2)/2,y1-2*r)
+	turtle.down()
+	turtle.fillcolor('red')
+	turtle.begin_fill()
+	turtle.circle(r)
+	turtle.end_fill()
+
+	r = 10
+	turtle.fillcolor('white')
+	turtle.up()
+	turtle.goto(x1+5,y1-2*r)
+	turtle.down()
+	turtle.begin_fill()
+	turtle.circle(r)
+	turtle.end_fill()
+
+	turtle.up()
+	turtle.goto(x2-5,y1-2*r)
+	turtle.down()
+	turtle.begin_fill()
+	turtle.circle(r)
+	turtle.end_fill()
+
+def pattesTete (x1,y1,x2,y2):
+	turtle.fillcolor('brown')
+	turtle.up()
+	turtle.goto(x1,y2)
+	turtle.down()
+	i=0
+	turtle.begin_fill()
+	while i<3:
+		turtle.left(90)
+		turtle.forward(y2-y1)
+		i=i+1
+	turtle.end_fill()
+	turtle.up()
+	turtle.goto(x2,y2)
+	turtle.down()
+	turtle.right(180)
+	
+	i=0
+	turtle.begin_fill()
+	while i<3:
+		turtle.forward(y2-y1)
+		turtle.left(90)
+		i=i+1
+	turtle.end_fill()
+	
+	turtle.up()
+	turtle.goto(x2,y2)
+	i=0
+	turtle.down()
+	turtle.begin_fill()
+	while i<3:
+		turtle.forward (y2-y1)
+		turtle.right(90)
+		i=i+1
+	turtle.end_fill()
+
+	turtle.up()
+	turtle.goto(x2,-10+(y2+y1)/2)
+	turtle.right(90)
+	turtle.forward ((y2-y1)/2)
+	turtle.down()
+	turtle.fillcolor('white')
+	turtle.begin_fill()
+	turtle.circle(5)
+	turtle.end_fill()
+
+# Fonction qui dessine le marcassin
+def marcassin(x1,y1,x2,y2):
+	rectangle (x1,y1,x2,y2,fillcolor="brown")
+	pattesTete (x1+y2-y1,y1,x2,y2)

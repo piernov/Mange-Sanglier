@@ -73,6 +73,8 @@ def decors():
 	dessin.arbre(20, 150)
 	dessin.herbe(-12,turtle.window_width()-40,30)
 	dessin.soleil(turtle.window_height()-30,-40,50,50)
+	dessin.champignon(15,400)
+	dessin.marcassin(-50+turtle.window_width()/2, 0, 50+turtle.window_width()/2, 30)
 
 # Dessine l'interface
 def dessine(Etat):
