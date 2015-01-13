@@ -1,0 +1,270 @@
+Pierre-Emmanuel Novac, Marion Payet                                           *
+*******************************************************************************
+Compte rendu du jeu mange-sanglier                                            #
+###############################################################################
+
+
+
+Règles du jeu :
+===============================================================================
+
+
+Le but du jeu est de trouver tous les sangliers afin de les déguster pour le 
+diner de ce soir. 
+Le joueur commence donc à jouer au niveau 1 qui est composé de 49 cases où se 
+cachent trois marcassins, trois laies, et trois sangliers. Pour gagner il faut
+que le joueur trouve les 9 items c'est-à-dire tombe sur 24 cases occupées. 
+Lorsque le niveau 1 est réussi, le joueur peut passer au niveau 2.
+Au niveau 2, le jeu est composé de 100 cases où se cachent trois marcassins, 
+trois laies et trois sanglier, tout comme au niveau précédent. Le joueur gagne
+s'il trouve les 24 cases occupées. Une fois le niveau accompli avec succès le 
+joueur pet passer au niveau supérieur.
+Le niveau 3 se compose de 49 cases et d'un seul marcassin, d'une laie, et d'un 
+sanglier. Pour gagner il faut que le joueur trouve les 8 cases occupées par 
+les items. Une fois le niveau 3 accompli le joueur passe au niveau 4.
+Le niveau 4 se compose, tout comme le niveau 2, de 100 cases mais avec un seul 
+marcassin, une laie, et un sanglier. Le joueur peut gagner s'il trouve les 
+3 items. Le niveau 4 est le dernier, le joueur a donc terminé le jeu et peut 
+choisir de recommencer pour obtenir un meilleur score à chaque niveau (en 
+revanche la gestion de l'enregistrement des meilleurs scores n'a pas été 
+implémentée).
+
+À chaque niveau, le joueur perd s'il a un score inférieur à -200. La gestion du
+score se décompose de la manière suivante :
+
+ * +100 points pour une bonne case
+ * -20 points pour une mauvaise case
+  Perte à -200
+
+
+
+Structure du projet :
+===============================================================================
+
+
+Le code a été organisé de manière à être le plus réutilisable possible, d'une
+part à l'intérieur de ce projet, mais aussi possiblement dans d'autres projets.
+Nous avons aussi essayé d'utiliser la force des espaces de nom pour rendre plus
+clair le code et c'est sur ce concept que se base la décomposition en module, 
+en plus du bon sens utilisé pour classer les différentes fonctions.
+Le nom des fonctions a été gardé le plus simple possible sauf dans certains cas
+particulier, comme les fonctions d'initialisation d'autres fonctions, qui 
+comportent donc le préfixe « init ».
+De plus, l'utilisation de variables globales a été évitées au maximum. Pour 
+cette raison on utilise un tableau qui sera passé à la majorité des fonctions 
+ayant besoin de traiter l'état global du jeu. Ce n'est pas forcément la 
+meilleure façon de procéder, mais une certaine alternative à avoir une liste 
+de variables globales peu claires. Aussi cela amène à réfléchir sur l'utilité
+d'un paradigme de programmation différent de l'impératif.
+
+
+Décomposition en modules et fonctions :
+---------------------------------------
+
+Le code du jeu est composé de 5 fichiers :
+
+### cacheCache.py
+
+Fichier principal du jeu permettant de le lancer.
+Il contient donc une fonction principale `main()` qui va appeller différente 
+fonction d'initialisation et lancer la boucle évènementielle de turtle. 
+Ainsi elle appelle la fonction `initTurtle()` du module interface décrit plus 
+loin puis initialise le tableau Etat, décrit plus loin lui aussi. L'interface 
+est ensuite dessinée.
+La fonction `clic()` est associée à l'évènement `click` afin de gérer un clic sur
+un bouton de la souris. Cette fonction procède de manière différente si le 
+niveau est terminé. Dans ce cas, elle ne fait que vérifier si un des deux 
+boutons "Oui"/"Non" a été cliqué. Dans l'autre, elle efface l'écran, passe la 
+main à la fonction `clic()` du module jeu, puis redessine l'interface.
+Enfin la boucle de turtle est lancée. C'est une boucle infinie qui ici n'a 
+comme but que d'attendre un clic de la souris et d'appeller la fonction `clic()`
+le cas échéant.
+
+Bien évidemment on appelle la fonction main`()` pour lancer le jeu.
+
+Il contient en outre la configuration du jeu (type des animaux, description 
+des niveaux).
+
+### dessin.py
+
+Module regroupant d'une part des fonctions génériques pour dessiner avec 
+turtle : ligne, rectangle, cercle, triangle, texte, et d'autre part les 
+fonctions plus particulière permettant de dessiner des éléments de l'interface
+du jeu : bouton, arbre, herbe, soleil, champignon, marcassin.
+La fonction `initTexte()` un peu particulière sera décrite plus loin.
+
+### interface.py
+
+Module regroupant des fonctions de gestion de l'interface du jeu.
+
+Nous avons donc ici la fonction `initTurtle()` qui définit la taille de la 
+fenêtre qui est donc fixe. 
+Il aurait été intéressant de permettre une taille dynamique, mais cela 
+aurait demandé d'écrire toute l'interface pour utiliser des coordonnées 
+relatives en pourcentage par exemple plutôt qu'absolues en pixel, et 
+d'autre part turtle ne propose pas d'évènement lié au redimensionnement 
+de la fenêtre donc l'interface n'aurait pas pu être mise à jour dynamiquement.
+On définit aussi le titre de la fenêtre, la vitesse de la tortue (maximale ici)
+et la couleur de fond.
+La fonction `turtle.setworldcoordinates()` est un peu particulière : elle permet 
+de définir un système de coordonées différent. Nous nous en servons ici pour 
+redéfinir le repère de turtle. L'axe y est inversé, et l'origine est définie 
+en haut à gauche, ceci pour une question de commodité (beaucoup de moteurs 
+graphiques 2D utilisent ce système plutôt qu'un repère classique avec l'origine
+au centre).
+
+`genQuadrillage()` créée un tableau contenant toutes les coordonnées des cases de la 
+grille, utile pour les situer.
+
+`dessinQuadrillage()` traite ce même tableau pour les afficher à l'écran.
+
+`fin()` est lancée à la fin du niveau (perdu ou gagné) pour afficher une boîte de 
+dialogue en haut de l'écran invitant le joueur à continuer/recommencer.
+
+`hud()` dessine le petit encadré en haut à gauche avec le score, le niveau courant
+et la barre de vie. Cette barre de vie est basée sur le score, sur un intervalle 
+de 0 à -200 (et passe du vert au rouge en -100).
+
+`decors()` appelle simplement les fonctions du module dessin pour dessiner les 5 
+éléments de décor.
+
+`dessine()` fonction dessiner l'ensemble de l'interface, en appellant les 3 
+fonctions ci-dessus.
+
+`caseVersCL()` convertit le numéro d'une case en retournant un couple 
+(colonne,ligne)
+
+Le lot des 3 fonctions `bouton()`, `verifBouton()`, `initBouton()` et le tableau 
+boutons gère les 2 boutons "Oui"/"Non" des boîtes de dialogue. (un peu 
+lourd mais pourrait être extensible à d'autres fonctionnalités) 
+
+### jeu.py
+
+Ce module jeu gère le mécanisme en jeu, c'est à dire traite toutes les actions 
+à effectuer en arrière plan lorsque le joueur clique sur une case. Il possède 
+donc une fonction `clic()` (appellée par la fonction `clic()` du fichier principal 
+comme vu précédemment), une fonction `miss()` qui traite le cas où il n'y a rien 
+derrière la case, et une fonction `hit()` qui traite l'autre cas. Cette dernière 
+vérifie évidemment si toute les case d'un objet ont été trouvées, et si tous 
+les objets ont été trouvés.
+Les deux fonction peuvent appeller la fonction `fin()` le cas échéant. Elle 
+changera ainsi le mode de fonctionnement du clic et déclanchera le dessein 
+d'une boîte de dialogue.
+
+### placement.py
+
+Ce module permet simplement les algorithmes pour placer aléatoirement les 
+objets sur les cases, en prenant en compte le nombre de cases à occuper, 
+les éléments déjà placés, les bords de la grille. Ces fonctions sont assez 
+lourdes mais permettent un placement réellement aléatoire, surtout concernant 
+un objet à 3 cases qui peut être positionné dans tous les sens. En revanche 
+si l'aléatoire n'est pas « assez aléatoire » (comprendre re-sélectionne des 
+cases invalides), le programme pourrait mettre un certain temps à choisir les 
+cases (de même si la grille est trop petite par rapport au nombre d'élément à 
+placer).
+Un message de débogage indiquant le numéro de la case d'un élément à été laissé
+intentionnellement pour pouvoir terminer et donc tester le jeu rapidement.
+
+
+Choix des structures de données :
+---------------------------------
+
+Pour préciser l'explication des fonctions ci-dessus, il faut comprendre que 
+toute l'évolution du jeu se déroule dans un unique tableau : `Etat`. Mais 
+précisons d'abord les autres structures de données.
+
+`Config` : tableau qui n'est pas modifié à l'exécution, il sert seulement au 
+stockage de la configuration, càd aux paramètres des niveaux et des objets.
+Le détail est donné en commentaires de `cacheCache.py`. Une organisation de ce 
+type permet donc de faire évoluer facilement les niveaux du jeu, de redéfinir 
+la gestion du score.
+
+`cases` : tableau qui à chaque numéro de case (en index) fait correspondre un 
+tableau de coordonées du point en haut à gauche et du point en bas à droite 
+de la case. On utilise la fonction `caseVersCL()` pour convertir ce numéro de 
+(qui est donc de 0 à 48 ou de 0 à 99 suivant le niveau), en numéro de colonne 
+et de ligne lorsque ce format et requis.
+
+`placepokemons` : contient la place de chaque objet sur la grille, tel que 
+retourné par la fonction `placement.placerPokemons()`.
+
+Lors de l'initialisation de `Etat`, on y recopie donc les paramètres du niveau, 
+on y ajoute la grille et le placement des objets. Ce tableau est ensuite passé 
+en paramètre de la majorité des fonctions qui l'utiliserons pour modifier 
+l'état du jeu et le reporter sur l'interface.
+
+Est aussi utilisé uniquement dans le module interface un tableau `boutons` qui 
+contient simplement les coordonnées des boutons "Oui"/"Non". Ce tableau n'a pas
+besoin d'être utilisé à différents endroits et à différents moment, il n'est 
+donc pas dans `Etat`.
+
+
+
+Répartition du travail:
+===============================================================================
+
+
+Afin de finir le jeu dans le temps imparti nous nous sommes répartis le travail
+de la manière suivante :
+Pierre-Emmanuel s'est occupé du corps du jeu, et Marion, après avoir donné la 
+majorité des idées nécéssaires au développement du projet, a fait les graphismes
+et la fonction qui met fin au jeu.
+Afin de mettre en commun ce que nous faisions Pierre-Emmanuel mettait sur 
+Github ce qu'il avait fait, et Marion n'ayant pas de compte sur Github les
+envoyait par mail. après chacun regardait ce que l'autre avait fait afin 
+d'informer l'autre si il n'était pas d'accord ou si il pensait que sa méthode
+était la meilleure.
+
+
+
+Difficultés rencontrées :
+===============================================================================
+
+
+Au niveau des graphismes nous avons eu quelques petits problèmes de difformités,
+soit la tête du sanglier ne se trouvait pas reliée au corps ou se trouvait sous
+le ventre de l'animal. Afin de résoudre ce problème nous avons posés toutes les
+coordonnées utiles sur un papier et nous avons tout fait pas à pas en même temps 
+que de faire le code.
+De plus, l'arbre au tout début n'avait pas une tête d'arbre, c'était un cercle
+au dessus d'un rectangle, ce qui était ignoble. Afin d'obtenir quelque chose 
+qui ressemblait plus à un arbre nous avons dû faire appel à tous nos talents de
+dessinateurs et réfléchir à quelque chose qui ressemblerait plus à un arbre, 
+nous avons donc fait trois cercles qui s'entre-croisaient et enfin nous les 
+avons colorés pour que cela ressemble à un arbre.
+Une autre des difficultés a été de trouver trois autres choses qui nous 
+auraient permises de faire des éléments de décors.
+
+L'une des difficultés principale était tout de même la gestion des coordonnées 
+sur l'interface, en partie palliée grâce à l'utilisation d'un autre repère et 
+en s'efforçant d'utiliser autant que possible les fonctions de la boîte à 
+outils `dessin` que nous avons créé ainsi que des coordonnées relatives aux 
+entre elles pour chacun des éléments. Les ajustements de position ont en 
+revanche été fait « à tâtons ».
+Pour cela, comme indiqué plus haut il aurait été intéressant d'avoir tout en 
+coordonnées relatives, mais cela demande un certain travail et un temps de 
+réflexion long.
+Une autre difficulté fut le positionement aléatoire des objets, qui a été 
+surmontée par la création d'un module `placement` qui contient un algorithme 
+malheureusement peu clair et peu optimisé.
+Pour en revenir à l'interface, j'utilise (Pierre-Emmanuel) une résolution de 
+rendu de police inférieure (64ppp) à celle standard (96ppp). Ainsi le début 
+de l'interface ayant été réalisé sur mon ordinateur, lors du passage à un autre
+ordinateur la taille des polices était bien trop importante et dépassait 
+largement des cadres. Un petit contournement avec la fonction `initTexte()` a donc 
+été mis en place. Celle ci permet grâce à un savant calcul de trouver un 
+rapport (qui manque beaucoup de précision et qui ne semble en plus pas vraiment
+proportionnel) entre la taille d'un tiret cadratin et la taille de la police à
+utiliser. `tailleTexte` stocke donc la taille de la police à utiliser par la 
+fonction `texte()`.
+
+
+
+Travail qui reste à faire :
+===============================================================================
+
+
+Nous aurions aimé faire une fonction qui affiche les meilleurs scores.
+Le sanglier que nous avons dessiné est très peu esthétique et nous regrettons
+le manque de temps qui nous a empéché de retravailler les graphismes.
+
