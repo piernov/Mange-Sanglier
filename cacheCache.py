@@ -19,8 +19,7 @@ Config = {
 	# Configuration de chacun des niveaux
 	"niveaux" : [
 		{
-#			"pokemons" : { "Sanglier": 3, "Laie": 3, "Marcassin": 3},	# Nombre de Pokémons cachés
-			"pokemons" : { "Sanglier": 0, "Laie": 0, "Marcassin": 1},	# Nombre de Pokémons cachés
+			"pokemons" : { "Sanglier": 3, "Laie": 3, "Marcassin": 3},	# Nombre de Pokémons cachés
 			"cases" : [7, 7],						# Nombre de lignes et de colonnes dans la grille
 			"ptPokemons" : 100,						# Points gagnés pour chaque bonne case
 			"ptMalus" : 20,							# Points perdus pour chaque mauvaise case

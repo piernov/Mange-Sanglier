@@ -9,7 +9,7 @@ boutons = []
 
 def initTurtle():
 	# Fonction qui initialise la fenêtre de la tortue
-	turtle.setup(width=1024, height=600)
+	turtle.setup(width=800, height=600)
 	turtle.title("Mange-Sanglier")
 	# Setworldcoordinates redéfini le système de coordonnées
 	turtle.setworldcoordinates(0, turtle.window_height(), turtle.window_width(), 0)
