@@ -73,7 +73,7 @@ def placerPokemon(nCases, pokemon, num, placepokemons, ncol, nligne):
 		# Ci dessus on cherche si les numéros de cases trouvées sont correctes et si elles ne sont pas déjà occupées.
 		fini = True
 		for k, v in tmpCases.items():
-			if k in placepokemons or k < 0 or k > ncol*nligne:
+			if k in placepokemons or k < 0 or k > ncol*nligne-1:
 				fini = False # Placement incorrect
 
 	# Enfin on ajoute les cases sélectionnées au tableau contenant les Pokémons placés
